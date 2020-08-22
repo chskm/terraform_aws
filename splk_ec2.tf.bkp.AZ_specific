@@ -1,0 +1,37 @@
+provider "aws" {
+  profile = "default"
+  region  = "us-west-2"
+}
+
+resource "aws_instance" "Splunk_Infra_CM" {
+  ami             = "ami-02f147dfb8be58a10"
+  instance_type   = var.instance_type
+  security_groups = [ "launch-wizard-2" ]
+  key_name        = "deepthi_ec2_w2"
+  availability_zone = "us-west-2a"
+
+  root_block_device {
+    volume_size            = 30
+    delete_on_termination = true
+  }
+
+  provisioner "file" {
+    source      = "splunk_script.sh"
+    destination = "/tmp/splunk_script.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/splunk_script.sh",
+      "/tmp/splunk_script.sh args",
+    ]
+  }
+
+  tags = {
+    Name = "CM"
+  }
+}
+
+variable "instance_type" {
+  default ="t2.micro"
+}
