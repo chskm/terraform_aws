@@ -1,0 +1,14 @@
+provider "aws" {
+  profile = "default"
+  region  = "us-west-2"
+}
+
+resource "aws_instance" "Splunk_Infra_CM" {
+  ami             = "ami-02f147dfb8be58a10"
+  instance_type   = "t2.micro"
+  security_groups = [ "launch-wizard-2" ]
+  key_name        = "deepthi_ec2_w2"
+  tags = {
+    Name = "CM"
+  }
+}
